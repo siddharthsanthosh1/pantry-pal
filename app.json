@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Pantry Pal",
+    "name": "PantryPal",
     "slug": "pantry-pal",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "pantrypal",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
       "resizeMode": "contain",
@@ -13,18 +13,37 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pantrypal.app"
+      "bundleIdentifier": "com.pantrypal.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "PantryPal needs camera access to scan food labels.",
+        "NSPhotoLibraryUsageDescription": "PantryPal saves photos of your food labels."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#2D6A4F"
       },
-      "package": "com.pantrypal.app"
+      "package": "com.pantrypal.app",
+      "permissions": ["CAMERA", "RECEIVE_BOOT_COMPLETED", "VIBRATE"]
     },
     "web": {
       "bundler": "metro",
       "output": "static"
     },
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow PantryPal to scan food labels with your camera."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#2D6A4F"
+        }
+      ]
+    ]
   }
 }

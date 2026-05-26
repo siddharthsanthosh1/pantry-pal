@@ -1,82 +1,101 @@
-import { ScrollView, View, Text, StyleSheet, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import ScreenHeader from '../../components/ScreenHeader';
-import PantryItemCard from '../../components/PantryItemCard';
-import { colors, spacing } from '../../constants/theme';
+import { View, ScrollView, Text, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import Header from '../../components/Header';
+import ScanButton from '../../components/ScanButton';
+import { FoodCardCompact } from '../../components/FoodCard';
+import EmptyState from '../../components/EmptyState';
+import { usePantry } from '../../contexts/PantryContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
-const SAMPLE_ITEMS = [
-  { id: '1', name: 'Whole Milk', quantity: '1 carton', expiresIn: 2 },
-  { id: '2', name: 'Eggs', quantity: '12 count', expiresIn: 7 },
-  { id: '3', name: 'Spinach', quantity: '1 bag', expiresIn: 3 },
-  { id: '4', name: 'Chicken Breast', quantity: '2 lbs', expiresIn: 1 },
-  { id: '5', name: 'Rice', quantity: '2 lbs', expiresIn: 90 },
-];
-
+/**
+ * Pantry home — scan CTA, analytics, and recent scans preview.
+ */
 export default function PantryScreen() {
+  const router = useRouter();
+  const { items } = usePantry();
+  const { isDark } = useTheme();
+  const bg = isDark ? 'bg-darkBg' : 'bg-background';
+  const recent = items.slice(0, 3);
+
   return (
-    <SafeAreaView style={styles.safe} edges={['bottom']}>
-      <ScreenHeader
-        title="Pantry Pal"
-        subtitle="Track what's in your kitchen"
-      />
-      <View style={styles.searchWrap}>
-        <TextInput
-          style={styles.search}
-          placeholder="Search pantry..."
-          placeholderTextColor={colors.textSecondary}
-        />
-      </View>
+    <View className={`flex-1 ${bg}`}>
+      <Header title="PantryPal" subtitle="Scan labels · Save food · Waste less" />
+
       <ScrollView
-        style={styles.list}
-        contentContainerStyle={styles.listContent}
+        className="flex-1 px-5 pt-6"
+        contentContainerStyle={{ paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.sectionLabel}>Expiring soon</Text>
-        {SAMPLE_ITEMS.map((item) => (
-          <PantryItemCard
-            key={item.id}
-            name={item.name}
-            quantity={item.quantity}
-            expiresIn={item.expiresIn}
+        {/* Large camera entry */}
+        <Pressable
+          onPress={() => router.push('/scan')}
+          className={`rounded-3xl overflow-hidden mb-6 border-2 border-dashed ${
+            isDark ? 'border-primaryLight/40 bg-darkCard' : 'border-primary/30 bg-accent/40'
+          }`}
+        >
+          <View className="items-center py-10">
+            <View className="w-20 h-20 rounded-full bg-primary items-center justify-center mb-4">
+              <Ionicons name="camera" size={40} color="#fff" />
+            </View>
+            <Text className={`text-lg font-bold ${isDark ? 'text-white' : 'text-primaryDark'}`}>
+              Scan a food label
+            </Text>
+            <Text className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-muted'}`}>
+              Point at expiration date & product name
+            </Text>
+          </View>
+        </Pressable>
+
+        <Pressable
+          onPress={() => router.push('/add-food')}
+          className={`rounded-2xl px-4 py-4 mb-6 flex-row items-center justify-between border border-black/5 ${
+            isDark ? 'bg-darkCard' : 'bg-white'
+          }`}
+        >
+          <View className="flex-row items-center">
+            <View className="w-11 h-11 rounded-full bg-primary/15 items-center justify-center mr-3">
+              <Ionicons name="add" size={24} color={isDark ? '#A7F3D0' : '#2D6A4F'} />
+            </View>
+            <View>
+              <Text className={`${isDark ? 'text-white' : 'text-primaryDark'} font-bold text-base`}>
+                Add food manually
+              </Text>
+              <Text className={`${isDark ? 'text-gray-400' : 'text-muted'} text-sm mt-0.5`}>
+                Quick add without scanning
+              </Text>
+            </View>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={isDark ? '#9CA3AF' : '#94A3B8'} />
+        </Pressable>
+
+        <View className="flex-row items-center justify-between mb-3">
+          <Text className={`text-lg font-bold ${isDark ? 'text-white' : 'text-primaryDark'}`}>
+            Recent scans
+          </Text>
+          {items.length > 0 && (
+            <Pressable onPress={() => router.push('/(tabs)/library')}>
+              <Text className="text-primaryLight font-semibold">See all</Text>
+            </Pressable>
+          )}
+        </View>
+
+        {recent.length === 0 ? (
+          <EmptyState
+            message="No foods scanned yet."
+            hint="Tap Scan Label below or add a food manually."
           />
-        ))}
+        ) : (
+          recent.map((item, i) => (
+            <Animated.View key={item.id} entering={FadeIn.delay(i * 100)}>
+              <FoodCardCompact item={item} />
+            </Animated.View>
+          ))
+        )}
       </ScrollView>
-    </SafeAreaView>
+
+      <ScanButton />
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  searchWrap: {
-    paddingHorizontal: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  search: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 4,
-    borderWidth: 1,
-    borderColor: colors.border,
-    fontSize: 16,
-    color: colors.text,
-  },
-  list: {
-    flex: 1,
-  },
-  listContent: {
-    paddingHorizontal: spacing.md,
-    paddingBottom: spacing.lg,
-  },
-  sectionLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.textSecondary,
-    marginBottom: spacing.sm,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-});
