@@ -13,15 +13,12 @@ import {
   getUrgencyColor,
   URGENCY_LABELS,
 } from '../utils/urgency';
-import { useTheme } from '../contexts/ThemeContext';
-
 const SWIPE_THRESHOLD = 80;
 
 /**
  * Pantry library card with swipe-to-delete.
  */
 export default function FoodCard({ item, index = 0, onDelete }) {
-  const { isDark } = useTheme();
   const translateX = useSharedValue(0);
   const urgencyColor = getUrgencyColor(item.urgency);
 
@@ -45,9 +42,9 @@ export default function FoodCard({ item, index = 0, onDelete }) {
     transform: [{ translateX: translateX.value }],
   }));
 
-  const cardBg = isDark ? 'bg-darkCard' : 'bg-white';
-  const textMain = isDark ? 'text-white' : 'text-primaryDark';
-  const textSub = isDark ? 'text-gray-400' : 'text-muted';
+  const cardBg = 'bg-white/95';
+  const textMain = 'text-primaryDark';
+  const textSub = 'text-muted';
 
   return (
     <View className="mb-3 relative">
@@ -91,10 +88,9 @@ export default function FoodCard({ item, index = 0, onDelete }) {
 
 /** Compact card for calendar day detail */
 export function FoodCardCompact({ item }) {
-  const { isDark } = useTheme();
   const urgencyColor = getUrgencyColor(item.urgency);
-  const cardBg = isDark ? 'bg-darkCard' : 'bg-white';
-  const textMain = isDark ? 'text-white' : 'text-primaryDark';
+  const cardBg = 'bg-white/95';
+  const textMain = 'text-primaryDark';
 
   return (
     <View className={`${cardBg} rounded-xl p-3 mb-2 border border-black/5`}>

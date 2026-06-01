@@ -3,16 +3,18 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AuthProvider } from '../contexts/AuthContext';
 import { PantryProvider } from '../contexts/PantryContext';
-import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
+import { ThemeProvider } from '../contexts/ThemeContext';
+import AuthGate from '../components/AuthGate';
 
 function RootStack() {
-  const { isDark } = useTheme();
-
   return (
     <>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <StatusBar style="light" />
+      <AuthGate />
       <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+        <Stack.Screen name="login" options={{ animation: 'fade' }} />
         <Stack.Screen name="index" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen
@@ -38,9 +40,11 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider>
-          <PantryProvider>
-            <RootStack />
-          </PantryProvider>
+          <AuthProvider>
+            <PantryProvider>
+              <RootStack />
+            </PantryProvider>
+          </AuthProvider>
         </ThemeProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
