@@ -2,21 +2,26 @@ import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
-import { APP_GRADIENT } from '../constants/gradient';
 
 /**
- * Gradient page header — matches login screen colors.
+ * Gradient page header with dark-mode toggle and optional sign-out.
  */
 export default function Header({ title, subtitle, rightAction, showSignOut = false }) {
+  const { isDark, toggleTheme } = useTheme();
   const { signOut, user } = useAuth();
   const insets = useSafeAreaInsets();
 
+  const gradientColors = isDark
+    ? ['#1B4332', '#243044']
+    : ['#2D6A4F', '#40916C'];
+
   return (
     <LinearGradient
-      colors={APP_GRADIENT.colors}
-      start={APP_GRADIENT.start}
-      end={APP_GRADIENT.end}
+      colors={gradientColors}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={{
         paddingTop: insets.top + 12,
         paddingBottom: 24,
@@ -48,6 +53,17 @@ export default function Header({ title, subtitle, rightAction, showSignOut = fal
               <Ionicons name="log-out-outline" size={22} color="#fff" />
             </Pressable>
           ) : null}
+          <Pressable
+            onPress={toggleTheme}
+            className="w-10 h-10 rounded-full bg-white/20 items-center justify-center"
+            accessibilityLabel="Toggle dark mode"
+          >
+            <Ionicons
+              name={isDark ? 'sunny-outline' : 'moon-outline'}
+              size={22}
+              color="#fff"
+            />
+          </Pressable>
         </View>
       </View>
     </LinearGradient>

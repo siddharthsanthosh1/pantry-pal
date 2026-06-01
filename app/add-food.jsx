@@ -3,7 +3,7 @@ import { View, Text, TextInput, Pressable, Platform, KeyboardAvoidingView } from
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Header from '../components/Header';
-import ScreenBackground from '../components/ScreenBackground';
+import { useTheme } from '../contexts/ThemeContext';
 import { usePantry } from '../contexts/PantryContext';
 import { getDaysLeft } from '../utils/urgency';
 
@@ -11,6 +11,7 @@ const CATEGORIES = ['Dairy', 'Produce', 'Meat', 'Bakery', 'Beverages', 'Frozen',
 
 export default function AddFoodScreen() {
   const router = useRouter();
+  const { isDark } = useTheme();
   const { addItem } = usePantry();
 
   const [productName, setProductName] = useState('');
@@ -28,6 +29,10 @@ export default function AddFoodScreen() {
   }, [productName, expirationDate]);
 
   const canSave = Object.keys(errors).length === 0 && !saving;
+  const bg = isDark ? 'bg-darkBg' : 'bg-background';
+  const card = isDark ? 'bg-darkCard' : 'bg-white';
+  const textMain = isDark ? 'text-white' : 'text-primaryDark';
+  const textSub = isDark ? 'text-gray-400' : 'text-muted';
 
   const onSave = async () => {
     if (!canSave) return;
@@ -46,7 +51,7 @@ export default function AddFoodScreen() {
   };
 
   return (
-    <ScreenBackground>
+    <View className={`flex-1 ${bg}`}>
       <Header
         title="Add Food"
         subtitle="Manual entry"
@@ -65,20 +70,22 @@ export default function AddFoodScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         className="flex-1 px-5 pt-5"
       >
-        <View className="bg-white/95 rounded-2xl p-4 border border-white/20">
-          <Text className="text-muted text-xs uppercase tracking-wide mb-2">Food</Text>
+        <View className={`${card} rounded-2xl p-4 border border-black/5`}>
+          <Text className={`${textSub} text-xs uppercase tracking-wide mb-2`}>Food</Text>
           <TextInput
             value={productName}
             onChangeText={setProductName}
             placeholder="e.g. Strawberries"
-            placeholderTextColor="#94A3B8"
-            className="text-primaryDark text-base px-4 py-3 rounded-xl border border-black/5 bg-white"
+            placeholderTextColor={isDark ? '#6B7280' : '#94A3B8'}
+            className={`${textMain} text-base px-4 py-3 rounded-xl border border-black/5 ${
+              isDark ? 'bg-darkSurface' : 'bg-white'
+            }`}
           />
           {errors.productName ? (
             <Text className="text-danger mt-2 text-sm">{errors.productName}</Text>
           ) : null}
 
-          <Text className="text-muted text-xs uppercase tracking-wide mb-2 mt-5">Category</Text>
+          <Text className={`${textSub} text-xs uppercase tracking-wide mb-2 mt-5`}>Category</Text>
           <View className="flex-row flex-wrap gap-2">
             {CATEGORIES.map((c) => {
               const active = category === c;
@@ -87,10 +94,14 @@ export default function AddFoodScreen() {
                   key={c}
                   onPress={() => setCategory(c)}
                   className={`px-4 py-2 rounded-full border ${
-                    active ? 'bg-primary border-primary' : 'bg-white border-black/10'
+                    active
+                      ? 'bg-primary border-primary'
+                      : isDark
+                        ? 'bg-darkSurface border-black/10'
+                        : 'bg-white border-black/10'
                   }`}
                 >
-                  <Text className={`text-sm font-semibold ${active ? 'text-white' : 'text-muted'}`}>
+                  <Text className={`text-sm font-semibold ${active ? 'text-white' : textSub}`}>
                     {c}
                   </Text>
                 </Pressable>
@@ -98,7 +109,7 @@ export default function AddFoodScreen() {
             })}
           </View>
 
-          <Text className="text-muted text-xs uppercase tracking-wide mb-2 mt-5">
+          <Text className={`${textSub} text-xs uppercase tracking-wide mb-2 mt-5`}>
             Expiration date
           </Text>
           <TextInput
@@ -107,8 +118,10 @@ export default function AddFoodScreen() {
             placeholder="YYYY-MM-DD"
             autoCapitalize="none"
             keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation' : 'default'}
-            placeholderTextColor="#94A3B8"
-            className="text-primaryDark text-base px-4 py-3 rounded-xl border border-black/5 bg-white"
+            placeholderTextColor={isDark ? '#6B7280' : '#94A3B8'}
+            className={`${textMain} text-base px-4 py-3 rounded-xl border border-black/5 ${
+              isDark ? 'bg-darkSurface' : 'bg-white'
+            }`}
           />
           {errors.expirationDate ? (
             <Text className="text-danger mt-2 text-sm">{errors.expirationDate}</Text>
@@ -118,13 +131,15 @@ export default function AddFoodScreen() {
         <Pressable
           onPress={onSave}
           disabled={!canSave}
-          className={`mt-5 py-4 rounded-xl items-center ${canSave ? 'bg-white' : 'bg-white/40'}`}
+          className={`mt-5 py-4 rounded-xl items-center ${
+            canSave ? 'bg-primary' : isDark ? 'bg-darkCard' : 'bg-gray-200'
+          }`}
         >
-          <Text className={`font-bold text-lg ${canSave ? 'text-primaryDark' : 'text-white/70'}`}>
+          <Text className={`font-bold text-lg ${canSave ? 'text-white' : textSub}`}>
             {saving ? 'Saving…' : 'Add to Pantry'}
           </Text>
         </Pressable>
       </KeyboardAvoidingView>
-    </ScreenBackground>
+    </View>
   );
 }

@@ -1,16 +1,19 @@
 import { Redirect } from 'expo-router';
-import { ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
-import ScreenBackground from '../components/ScreenBackground';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function Index() {
   const { user, initializing } = useAuth();
+  const { isDark } = useTheme();
 
   if (initializing) {
     return (
-      <ScreenBackground style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size="large" color="#fff" />
-      </ScreenBackground>
+      <View
+        className={`flex-1 items-center justify-center ${isDark ? 'bg-darkBg' : 'bg-background'}`}
+      >
+        <ActivityIndicator size="large" color="#40916C" />
+      </View>
     );
   }
 

@@ -10,9 +10,6 @@ import Animated, {
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
-/**
- * Floating action button — opens full-screen camera scan flow.
- */
 export default function ScanButton() {
   const router = useRouter();
   const scale = useSharedValue(1);
@@ -36,19 +33,19 @@ export default function ScanButton() {
     <Animated.View style={pulseStyle} className="absolute bottom-8 self-center z-50">
       <Pressable
         onPress={() => router.push('/scan')}
-        className="flex-row items-center bg-white/95 px-8 py-4 rounded-full shadow-lg"
+        className="flex-row items-center bg-primary px-8 py-4 rounded-full shadow-lg"
         style={{
-          shadowColor: '#1B4332',
+          shadowColor: '#2D6A4F',
           shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.35,
           shadowRadius: 16,
           elevation: 12,
         }}
       >
-        <View className="w-12 h-12 rounded-full bg-primary/15 items-center justify-center mr-3">
-          <Ionicons name="camera" size={28} color="#2D6A4F" />
+        <View className="w-12 h-12 rounded-full bg-white/20 items-center justify-center mr-3">
+          <Ionicons name="camera" size={28} color="#fff" />
         </View>
-        <Text className="text-primaryDark text-lg font-bold">Scan Label</Text>
+        <Text className="text-white text-lg font-bold">Scan Label</Text>
       </Pressable>
     </Animated.View>
   );
