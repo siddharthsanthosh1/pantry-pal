@@ -10,14 +10,12 @@ Features
 * Receive notifications before food expires
 * View items in a calendar format
 * Get recipe suggestions using ingredients that are nearing expiration
-* Dark mode support
 
 Getting Started
 
 npm install
 npx expo start
 
-Scan the QR code with Expo Go or run on an iOS/Android simulator.
 
 Tech Stack
 
@@ -28,6 +26,5 @@ Tech Stack
 * Expo Notifications
 * AsyncStorage
 
-Goal
 
 PantryPal helps households save money, reduce food waste, and make better use of the food they already have.
