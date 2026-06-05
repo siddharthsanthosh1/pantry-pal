@@ -1,46 +1,33 @@
-# PantryPal
+PantryPal
+Siddharth Santhosh • Ansh Kare • Pranav Bhaskaran • Preet Patel
 
-A modern React Native Expo app for food expiration tracking and reducing waste.
+PantryPal is a React Native Expo app that helps users reduce food waste by tracking expiration dates, sending reminders, and suggesting recipes based on ingredients that need to be used soon.
 
-## Quick start
+Features
 
-```bash
+* Scan food labels to quickly add items
+* Track expiration dates in one place
+* Receive notifications before food expires
+* View items in a calendar format
+* Get recipe suggestions using ingredients that are nearing expiration
+* Dark mode support
+
+Getting Started
+
 npm install
 npx expo start
-```
 
-Scan the QR code with **Expo Go** (SDK 52) on your phone, or press `i` / `a` for simulators.
+Scan the QR code with Expo Go or run on an iOS/Android simulator.
 
-> **Camera & notifications** work best on a physical device. iOS Simulator supports camera; notification scheduling requires a real device for full behavior.
+Tech Stack
 
-## Features
+* React Native & Expo
+* Expo Router
+* NativeWind
+* Expo Camera
+* Expo Notifications
+* AsyncStorage
 
-- **Pantry** — Home tab with label scanning (Expo Camera), mock AI analysis, analytics card
-- **Library** — Search, category filters, swipe-to-delete, urgency-colored cards
-- **Calendar** — Expiration dates with green/yellow/red dots (`react-native-calendars`)
-- **Recipes** — Suggestions prioritized by soonest-expiring pantry items
-- **Notifications** — Local reminders 3 days, 1 day, and day-of expiration
-- **Dark mode** — Toggle in any screen header
+Goal
 
-## Architecture
-
-| Path | Purpose |
-|------|---------|
-| `services/mockLabelAnalyzer.js` | Mock AI — swap for real vision API |
-| `services/storageService.js` | AsyncStorage persistence |
-| `services/notificationService.js` | Expo Notifications scheduling |
-| `data/mockRecipes.js` | Recipe catalog + matching logic |
-| `contexts/PantryContext.jsx` | Shared pantry state |
-
-## Tech stack
-
-- Expo Router · NativeWind (Tailwind) · Reanimated · Gesture Handler
-- Expo Camera · Expo Notifications · AsyncStorage
-
-## Replace mock AI
-
-Update `analyzeLabelImage()` in `services/mockLabelAnalyzer.js` to call your API. Keep the return shape:
-
-```js
-{ productName, expirationDate, category, estimatedDaysLeft }
-```
+PantryPal helps households save money, reduce food waste, and make better use of the food they already have.

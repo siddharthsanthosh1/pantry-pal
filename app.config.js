@@ -1,6 +1,9 @@
 /** Expo config — loads Firebase env vars into Constants.expoConfig.extra */
 export default ({ config }) => ({
   ...config,
+  plugins: [
+    "expo-asset",
+  ],
   extra: {
     ...config.extra,
     firebaseApiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
